@@ -3,6 +3,7 @@ import webpack, { Configuration } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
+import dotenv from 'dotenv';
 
 const webpackConfig = (env): Configuration => ({
 	entry: './src/index.tsx',
@@ -35,7 +36,8 @@ const webpackConfig = (env): Configuration => ({
 		new webpack.DefinePlugin({
 			'process.env.PRODUCTION': env.production || !env.development,
 			'process.env.NAME': JSON.stringify(require('./package.json').name),
-			'process.env.VERSION': JSON.stringify(require('./package.json').version)
+			'process.env.VERSION': JSON.stringify(require('./package.json').version),
+			'process.env': JSON.stringify(dotenv.config().parsed)
 		}),
 		new ForkTsCheckerWebpackPlugin({
 			eslint: {
