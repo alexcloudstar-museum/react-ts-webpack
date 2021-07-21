@@ -25,6 +25,10 @@ const webpackConfig = (env): Configuration => ({
 					transpileOnly: true
 				},
 				exclude: /dist/
+			},
+			{
+				test: /\.(png|jpg|jpeg|gif|svg)$/i,
+				type: 'asset/resource'
 			}
 		]
 	},
