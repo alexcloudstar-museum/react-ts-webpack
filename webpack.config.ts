@@ -1,11 +1,11 @@
-import path from 'path';
-import webpack, { Configuration } from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import dotenv from 'dotenv';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import path from 'path';
+import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
+import webpack from 'webpack';
 
-const webpackConfig = (env): Configuration => ({
+const webpackConfig = (env) => ({
 	entry: './src/index.tsx',
 	...(env.production || !env.development ? {} : { devtool: 'eval-source-map' }),
 	resolve: {
@@ -15,6 +15,14 @@ const webpackConfig = (env): Configuration => ({
 	output: {
 		path: path.join(__dirname, '/dist'),
 		filename: 'build.js'
+	},
+	devServer: {
+		historyApiFallback: true,
+		static: {
+			directory: path.join(__dirname, '/dist')
+		},
+		compress: true,
+		port: 9000
 	},
 	module: {
 		rules: [
@@ -29,6 +37,10 @@ const webpackConfig = (env): Configuration => ({
 			{
 				test: /\.(png|jpg|jpeg|gif|svg)$/i,
 				type: 'asset/resource'
+			},
+			{
+				test: /\.css$/i,
+				use: ['style-loader', 'css-loader']
 			}
 		]
 	},
