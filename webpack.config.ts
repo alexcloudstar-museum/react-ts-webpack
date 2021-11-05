@@ -4,6 +4,8 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import webpack from 'webpack';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
 const webpackConfig = (env) => ({
 	entry: './src/index.tsx',
@@ -39,9 +41,16 @@ const webpackConfig = (env) => ({
 				type: 'asset/resource'
 			},
 			{
-				test: /\.css$/i,
-				use: ['style-loader', 'css-loader']
+				test: /.s?css$/,
+				use: [MiniCssExtractPlugin.loader, 'css-loader']
 			}
+		]
+	},
+	optimization: {
+		minimizer: [
+			// For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+			// `...`,
+			new CssMinimizerPlugin()
 		]
 	},
 	plugins: [
@@ -59,7 +68,8 @@ const webpackConfig = (env) => ({
 			eslint: {
 				files: './src/**/*.{ts,tsx,js,jsx}' // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
 			}
-		})
+		}),
+		new MiniCssExtractPlugin()
 	]
 });
 
